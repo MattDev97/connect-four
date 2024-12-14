@@ -1,12 +1,16 @@
 import Routes from './Routes';
+import { GameContextProvider } from './context/GameContext';
 
 import './App.css';
 
 function App() {
   return (
-    <div className="App">
-	  <Routes />
-    </div>
+	<GameContextProvider>
+		<div className="App">
+			<Routes />
+		</div>
+	</GameContextProvider>
+    
   );
 }
 
