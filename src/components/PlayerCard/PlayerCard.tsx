@@ -11,6 +11,7 @@ type PlayerCardProps = {
 }
 
 function PlayerCard({ name = 'NaN', playerNumber = 1, score = 0} : PlayerCardProps): JSX.Element {
+	
 	return (
 		<div className={styles["player-card"]}>
 			<div className={styles["player-card-icon"]}>

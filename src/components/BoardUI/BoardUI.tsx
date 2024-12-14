@@ -1,4 +1,5 @@
 import React, { useRef, useEffect, useState } from 'react';
+import { useLocation } from 'react-router-dom';
 
 import { ReactComponent as BoardFront } from '../../assets/board-front.svg';
 import { ReactComponent as BoardBack } from '../../assets/board-back.svg';
@@ -30,7 +31,9 @@ const generatePixelGrid = (cellSize: number, board: number[][], offsetX: number,
 };
 
 function BoardUI(): JSX.Element {
-	const { gameCode, generateGameCode, board, initializeBoard, updateBoard, currentPlayer } = useGameContext();
+	const { gameCode, generateGameCode, board, initializeBoard, updateBoard, currentPlayer} = useGameContext();
+	const location = useLocation();
+	initializeBoard();
 
 	const rows = 6;
 	const columns = 7;
@@ -39,13 +42,12 @@ function BoardUI(): JSX.Element {
 	const [svgDimensions, setSvgDimensions] = useState({ width: 0, height: 0 });
 	const [grid, setGrid] = useState<{ x: number; y: number; cellSize: number; rowIndex: number; colIndex: number; player: number }[]>([]);
 	useEffect(() => {
-		initializeBoard();
 		if (boardFrontRef.current) {
 			initializeBoard();
 			const { width, height } = boardFrontRef.current.getClientRects()[0]
       		setSvgDimensions({ width, height });
 
-			  if (svgDimensions.width > 0 && board.length > 0) {
+			if (svgDimensions.width > 0 && board.length > 0) {
 				const cellSize = svgDimensions.width / columns;
 				const offsetX = (svgDimensions.width - cellSize * columns) / 2; // Center horizontally
 				const offsetY = (svgDimensions.height - cellSize * rows) / 2; // Center vertically
@@ -55,16 +57,27 @@ function BoardUI(): JSX.Element {
 			
 		}
 		
-	}, [initializeBoard]);
+	}, [initializeBoard, location]);
+
+	useEffect(() => {
+		if (boardFrontRef.current) {
+		  const { width, height } = boardFrontRef.current.getBBox();
+		  setSvgDimensions({ width, height });
+		}
+	}, []);
+
+	useEffect(() => {
+		if (svgDimensions.width > 0 && board.length > 0) {
+		  const cellSize = svgDimensions.width / columns;
+		  const offsetX = (svgDimensions.width - cellSize * columns) / 2; // Center horizontally
+		  const offsetY = (svgDimensions.height - cellSize * rows) / 2; // Center vertically
+		  const newGrid = generatePixelGrid(cellSize, board, offsetX, offsetY);
+		  setGrid(newGrid);
+		}
+	}, [svgDimensions, board, columns, rows]);
 
 	const handleMove = (row: number, col: number) => {
 		updateBoard(col, currentPlayer); // Example: Player 1 makes a move
-
-		const cellSize = svgDimensions.width / columns;
-		const offsetX = (svgDimensions.width - cellSize * columns) / 2; // Center horizontally
-		const offsetY = (svgDimensions.height - cellSize * rows) / 2; // Center vertically
-		const newGrid = generatePixelGrid(cellSize, board, offsetX, offsetY);
-		setGrid(newGrid);
 	};
 
 	return (

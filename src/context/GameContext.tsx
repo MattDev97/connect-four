@@ -7,6 +7,8 @@ interface GameContextProps {
 	board: number[][];
 	initializeBoard: () => void;
 	updateBoard: (col: number, player: number) => void;
+	playerOneScore?: number;
+	playerTwoScore?: number;
 }
 
 const GameContext = createContext<GameContextProps | undefined>(undefined);
@@ -15,6 +17,9 @@ export const GameContextProvider: React.FC<{ children: ReactNode }> = ({ childre
 	const [gameCode, setGameCode] = useState<string>('');
 	const [board, setBoard] = useState<number[][]>([]);
 	const [currentPlayer, setCurrentPlayer] = useState<number>(1);
+
+	const [playerOneScore, setPlayerOneScore] = useState<number>(0);
+	const [playerTwoScore, setPlayerTwoScore] = useState<number>(0);
 
 	const generateGameCode = () => {
 		const newGameCode = Math.random().toString(36).substr(2, 5).toUpperCase();
@@ -26,7 +31,7 @@ export const GameContextProvider: React.FC<{ children: ReactNode }> = ({ childre
 		  const newBoard = Array(6).fill(null).map(() => Array(7).fill(0));
 		  setBoard(newBoard);
 		}
-	  }, [board]);
+	}, [board]);
 
 	const updateBoard = (col: number, player: number) => {
 		setBoard(prevBoard => {
@@ -42,6 +47,13 @@ export const GameContextProvider: React.FC<{ children: ReactNode }> = ({ childre
 
 			if (row !== -1 && checkWinner(newBoard, row, col, player)) {
 				console.log(`Player ${player} wins!`);
+				if (player === 1) {
+					setPlayerOneScore(prevScore => prevScore + 1);
+				} else {
+					setPlayerTwoScore(prevScore => prevScore + 1);
+				}
+				setCurrentPlayer(1);
+				return Array(6).fill(null).map(() => Array(7).fill(0));
 			}
 
 			setCurrentPlayer(currentPlayer === 1 ? 2 : 1);
