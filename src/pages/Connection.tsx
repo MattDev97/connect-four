@@ -4,11 +4,11 @@ import Button from "../components/Button/Button";
 import Modal from "../components/Modal/Modal";
 import TextInput from "../components/TextInput/TextInput";
 
-import { useGameCode } from '../context/GameContext';
+import { useGameContext } from '../context/GameContext';
 import { Link } from 'react-router-dom';
 
 function Connection(): JSX.Element {
-	const { gameCode, generateGameCode } = useGameCode();
+	const { gameCode, generateGameCode } = useGameContext();
 
 	useEffect(() => {
 		if (!gameCode) {
