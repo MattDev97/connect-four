@@ -1,3 +1,27 @@
+@media (min-width: 1024px) {
+	/* Desktop styles */
+	.modal-wrapper {
+	  /* Add your desktop-specific styles here */
+	  width: 35rem;
+	}
+  }
+  
+  @media (min-width: 768px) and (max-width: 1023px) {
+	/* Tablet styles */
+	.modal-wrapper {
+	  /* Add your tablet-specific styles here */
+	  width: 75%;
+	}
+  }
+  
+  @media (max-width: 767px) {
+	/* Mobile styles */
+	.modal-wrapper {
+	  /* Add your mobile-specific styles here */
+	  width: 95%;
+	}
+  }
+
 .overlay {
 	position: fixed;
 	top: 0;
@@ -13,28 +37,27 @@
 }
 
 .modal-wrapper {
-	color: red;
+	margin: auto
 }
-
-
 
 .modal-content_wrapper {
 	position: relative;
-	min-height: 400px;
-	min-width: 100%;
-	width: 500px;
 
 	border-radius: 2.5rem;
 	border: 3px solid var(--color-black, #000);
-	background: var(--color-dark-purple, #7945FF);
+	background: var(--color-purple, #7945FF);
 	box-shadow: 0px 10px 0px 0px #000;
+
+	padding: 2rem 1.5rem;
 }
 
 .modal-header {
-	margin: 3rem auto;
+	margin: auto;
 	display: flex;
 	justify-content: center;
 	align-items: center;
+
+	margin-bottom: 2rem;
 }
 
 .modal-content {
