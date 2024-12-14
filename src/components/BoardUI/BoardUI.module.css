@@ -11,3 +11,20 @@
 .board-front {
 	z-index: 1;
 }
+
+.grid {
+	position: absolute;
+	top: 0;
+    left: 0;
+}
+
+.grid-cell {
+	border: 1px solid rgba(0, 0, 0, 0.2); /* Example border, adjust as needed */
+	z-index: 2;
+
+	cursor: pointer;
+}
+
+.grid-cell:hover {
+	background-color: red!important; /* Example background color, adjust as needed */
+}

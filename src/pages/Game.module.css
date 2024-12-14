@@ -3,7 +3,6 @@
 	flex-direction: row;
 	align-items: center;
 	justify-content: center;
-	height: 100vh;
 }
 
 .game-column {
@@ -12,4 +11,11 @@
 	align-items: center;
 	justify-content: center;
 	margin: 0 1rem;
+}
+
+.game-header {
+	width: 100%;
+    margin: 3rem;
+
+	justify-content: space-between;
 }

@@ -9,6 +9,7 @@ function App() {
 		<div className="App">
 			<Routes />
 		</div>
+		<div className="Footer"></div>
 	</GameContextProvider>
     
   );

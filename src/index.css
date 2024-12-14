@@ -1,3 +1,10 @@
+@font-face {
+	font-family: 'SpaceGrotesk';
+	src: url('./assets/fonts/SpaceGrotesk-VariableFont_wght.ttf') format('truetype');
+	font-weight: normal;
+	font-style: normal;
+}
+
 :root {
 	/* Base font size */
 	font-size: 16px; /* Default root size for rem calculations */
@@ -53,7 +60,11 @@ p {
 	font-weight: var(--font-weight-medium);
 }
 
-html, body, #root {
+body {
+  font-family: 'SpaceGrotesk', sans-serif;
+}
+
+html, body, #root, .App {
 	height: 100%;
 	margin: 0;
 	display: flex;
@@ -63,7 +74,7 @@ html, body, #root {
 }
 
 body {
-	background-color: var(--color-dark-purple);
+	background-color: var(--color-light-purple);
 	margin: 0;
     padding: 0;
 }
