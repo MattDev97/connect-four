@@ -1,4 +1,4 @@
-import React, { createContext, useState, useContext, ReactNode } from 'react';
+import React, { createContext, useState, useContext, ReactNode, useCallback } from 'react';
 
 interface GameContextProps {
 	gameCode: string;
@@ -6,7 +6,7 @@ interface GameContextProps {
 	generateGameCode: () => void;
 	board: number[][];
 	initializeBoard: () => void;
-	updateBoard: (row: number, col: number, player: number) => void;
+	updateBoard: (col: number, player: number) => void;
 }
 
 const GameContext = createContext<GameContextProps | undefined>(undefined);
@@ -21,21 +21,78 @@ export const GameContextProvider: React.FC<{ children: ReactNode }> = ({ childre
 		setGameCode(newGameCode);
 	};
 
-	const initializeBoard = () => {
-		const newBoard = Array(6).fill(null).map(() => Array(7).fill(0));
-		setBoard(newBoard);
-	};
+	const initializeBoard = useCallback(() => {
+		if (board.length === 0) {
+		  const newBoard = Array(6).fill(null).map(() => Array(7).fill(0));
+		  setBoard(newBoard);
+		}
+	  }, [board]);
 
-	const updateBoard = (row: number, col: number, player: number) => {
+	const updateBoard = (col: number, player: number) => {
 		setBoard(prevBoard => {
 			const newBoard = prevBoard.map(row => row.slice());
-			newBoard[row][col] = player;
-			console.log(newBoard);
+			let row = -1;
+			for (let r = newBoard.length - 1; r >= 0; r--) {
+				if (newBoard[r][col] === 0) {
+					newBoard[r][col] = player;
+					row = r;
+					break;
+				}
+			}
+
+			if (row !== -1 && checkWinner(newBoard, row, col, player)) {
+				console.log(`Player ${player} wins!`);
+			}
+
+			setCurrentPlayer(currentPlayer === 1 ? 2 : 1);
 			
 			return newBoard;
 		});
-		setCurrentPlayer(currentPlayer === 1 ? 2 : 1);
+		
 	};
+
+	const checkWinner = (board: number[][], row: number, col: number, player: number) => {
+		const rows = board.length;
+		const cols = board[0].length;
+
+		// Check horizontal win
+		let count = 0;
+		for (let c = Math.max(0, col - 3); c < Math.min(cols, col + 4); c++) {
+		count = (board[row][c] === player) ? count + 1 : 0;
+		if (count >= 4) return true;
+		}
+
+		// Check vertical win
+		count = 0;
+		for (let r = Math.max(0, row - 3); r < Math.min(rows, row + 4); r++) {
+		count = (board[r][col] === player) ? count + 1 : 0;
+		if (count >= 4) return true;
+		}
+
+		// Check diagonal (bottom-left to top-right) win
+		count = 0;
+		for (let offset = -3; offset <= 3; offset++) {
+		const r = row + offset;
+		const c = col + offset;
+		if (r >= 0 && r < rows && c >= 0 && c < cols) {
+			count = (board[r][c] === player) ? count + 1 : 0;
+			if (count >= 4) return true;
+		}
+		}
+
+		// Check diagonal (top-left to bottom-right) win
+		count = 0;
+		for (let offset = -3; offset <= 3; offset++) {
+		const r = row - offset;
+		const c = col + offset;
+		if (r >= 0 && r < rows && c >= 0 && c < cols) {
+			count = (board[r][c] === player) ? count + 1 : 0;
+			if (count >= 4) return true;
+		}
+		}
+
+		return false;
+	}
 
 	return (
 		<GameContext.Provider value={{ gameCode, generateGameCode, board, initializeBoard, updateBoard, currentPlayer }}>

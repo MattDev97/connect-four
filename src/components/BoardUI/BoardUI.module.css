@@ -6,25 +6,24 @@
 
 .board-front {
 	position:absolute;
-}
+	z-index:2;
 
-.board-front {
-	z-index: 1;
+	pointer-events: none;
 }
 
 .grid {
 	position: absolute;
 	top: 0;
     left: 0;
+	z-index:1;
 }
 
 .grid-cell {
-	border: 1px solid rgba(0, 0, 0, 0.2); /* Example border, adjust as needed */
-	z-index: 2;
+	border: 1px solid rgba(0, 0, 0, 0.2);
+	z-index: 3;
 
 	cursor: pointer;
-}
-
-.grid-cell:hover {
-	background-color: red!important; /* Example background color, adjust as needed */
+	justify-content: center;
+    align-items: center;
+    display: flex;
 }
