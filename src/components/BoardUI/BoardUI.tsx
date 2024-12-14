@@ -6,12 +6,11 @@ import styles from './BoardUI.module.css';
 function BoardUI(): JSX.Element {
   return (
     <div className={styles["board-wrapper"]}>
+		
 		<div className={styles["board-front"]}>
 			<BoardFront/>
 		</div>
-		<div className={styles["board-back"]}>
-			<BoardBack/>
-		</div>
+		<BoardBack/>
     </div>
   );
 }
