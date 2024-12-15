@@ -27,11 +27,9 @@ export const GameContextProvider: React.FC<{ children: ReactNode }> = ({ childre
 	};
 
 	const initializeBoard = useCallback(() => {
-		if (board.length === 0) {
-		  const newBoard = Array(6).fill(null).map(() => Array(7).fill(0));
-		  setBoard(newBoard);
-		}
-	}, [board]);
+		const newBoard = Array(6).fill(null).map(() => Array(7).fill(0));
+		setBoard(newBoard);
+	}, []);
 
 	const updateBoard = (col: number, player: number) => {
 		setBoard(prevBoard => {
