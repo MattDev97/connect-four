@@ -26,7 +26,7 @@ function Game(): JSX.Element {
 				<div className={styles['game-header'] + ' ' + styles['game-container']}>
 					<div className={styles['game-column']}>
 						{/* Menu */}
-						<Button type="small" backgroundColor="var(--color-dark-purple)" textColor="white">Menu</Button>
+						<Button url='/' type="small" backgroundColor="var(--color-dark-purple)" textColor="white">Menu</Button>
 					</div>
 					<div className={styles['game-column']}>
 						{/* Logo */}
@@ -35,7 +35,7 @@ function Game(): JSX.Element {
 					</div>
 					<div className={styles['game-column']}>
 						{/* Restart */}
-						<Button type="small" backgroundColor="var(--color-dark-purple)" textColor="white">Restart</Button>
+						<Button url='/game/' type="small" backgroundColor="var(--color-dark-purple)" textColor="white">Restart</Button>
 					</div>
 				</div>
 				<div className={styles['game-container']}>
