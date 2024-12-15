@@ -9,6 +9,7 @@ interface GameContextProps {
 	board: number[][];
 	playerOneScore?: number;
 	playerTwoScore?: number;
+	socketUserId?: string;
 	updateBoard?: (col: number, player: number) => void;
 	generateGameCode: () => string;
 	setGameCode: (gameCode: string) => void;
@@ -29,7 +30,7 @@ export const GameContextProvider: React.FC<{ children: ReactNode }> = ({ childre
 	};
 
 	const updateBoard = (col: number, player: number) => {
-		socket.emit('playerMove', gameCode, col, player);
+		socket.emit('playerMove', gameCode, col, socket.id);
 	}
 
 	useEffect(() => {
