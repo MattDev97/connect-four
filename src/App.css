@@ -2,3 +2,16 @@
   text-align: center;
   width: 100%;
 }
+
+.Footer {
+	position: fixed;
+    bottom: 0;
+    width: 100%;
+    background-color: var(--color-dark-purple);
+    color: var(--color-white);
+    padding: 1rem;
+    border-radius: 4rem 4rem 0 0;
+    height: 21vh;
+    z-index: -1;
+    pointer-events: none;
+}
