@@ -27,6 +27,10 @@ export const GameContextProvider: React.FC<{ children: ReactNode }> = ({ childre
 	};
 
 	const initializeBoard = useCallback(() => {
+		setCurrentPlayer(1);
+		setPlayerOneScore(0);
+		setPlayerTwoScore(0);
+		
 		const newBoard = Array(6).fill(null).map(() => Array(7).fill(0));
 		setBoard(newBoard);
 	}, []);
@@ -105,7 +109,7 @@ export const GameContextProvider: React.FC<{ children: ReactNode }> = ({ childre
 	}
 
 	return (
-		<GameContext.Provider value={{ gameCode, generateGameCode, board, initializeBoard, updateBoard, currentPlayer }}>
+		<GameContext.Provider value={{ gameCode, generateGameCode, board, initializeBoard, updateBoard, currentPlayer, playerOneScore, playerTwoScore }}>
 			{children}
 		</GameContext.Provider>
 	);

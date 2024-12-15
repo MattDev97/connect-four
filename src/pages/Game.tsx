@@ -19,6 +19,7 @@ function Game(): JSX.Element {
 	return (
 		<div className={styles['game-container']}>
 			<div className={styles['game-column']}>
+				{playerOneScore}
 				<PlayerCard name="Player 1" playerNumber={1} score={playerOneScore}/>
 			</div>
 			<div className={styles['game-column']}>
@@ -42,6 +43,7 @@ function Game(): JSX.Element {
 				</div>
 			</div>
 			<div className={styles['game-column']}>
+				{playerTwoScore}
 				<PlayerCard name="Player 2" playerNumber={2} score={playerTwoScore}/>
 			</div>
 		</div>

@@ -35,13 +35,6 @@ function BoardUI(): JSX.Element {
 	}, [initializeBoard, location]);
 
 	useEffect(() => {
-		if (boardFrontRef.current) {
-			const { width, height } = boardFrontRef.current.getClientRects()[0];
-			setSvgDimensions({ width, height });
-		}
-	}, []);
-
-	useEffect(() => {
 		setGrid(generateGrid(svgDimensions, board, columns, rows));
 	}, [svgDimensions, board]);
 
