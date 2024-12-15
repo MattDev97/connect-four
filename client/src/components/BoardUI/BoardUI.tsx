@@ -1,5 +1,4 @@
 import React, { useRef, useEffect, useState } from 'react';
-import { useLocation } from 'react-router-dom';
 
 import { ReactComponent as BoardFront } from '../../assets/board-front.svg';
 import { ReactComponent as BoardBack } from '../../assets/board-back.svg';
@@ -8,38 +7,32 @@ import { ReactComponent as CounterYellow } from '../../assets/counter-yellow.svg
 import { ReactComponent as CounterRed } from '../../assets/counter-red.svg';
 
 import { generateGrid } from './gridHelper';
-
-import { useGameContext } from '../../context/GameContext';
-
 import styles from './BoardUI.module.css';
 
-function BoardUI(): JSX.Element {
-	const { gameCode, generateGameCode, board, initializeBoard, updateBoard, currentPlayer } = useGameContext();
-	const location = useLocation();
+type BoardUIProps = {
+	board?: number[][];
+	onMove: (row: number, col: number) => void;
+};
 
+function BoardUI({board, onMove} : BoardUIProps): JSX.Element {
 	const rows = 6;
 	const columns = 7;
 
 	const boardFrontRef = useRef<SVGSVGElement>(null);
 	const [svgDimensions, setSvgDimensions] = useState({ width: 0, height: 0 });
 	const [grid, setGrid] = useState<{ x: number; y: number; cellSize: number; rowIndex: number; colIndex: number; player: number }[]>([]);
-	
+
 	useEffect(() => {
-		if (boardFrontRef.current) {
-			initializeBoard();
+		console.log('Generating Grid');
+		if (board && boardFrontRef.current) {
 			const { width, height } = boardFrontRef.current.getClientRects()[0]
 			setSvgDimensions({ width, height });
 			setGrid(generateGrid({ width, height }, board, columns, rows));
 		}
-
-	}, [initializeBoard, location]);
-
-	useEffect(() => {
-		setGrid(generateGrid(svgDimensions, board, columns, rows));
-	}, [svgDimensions, board]);
+	}, [board]);
 
 	const handleMove = (row: number, col: number) => {
-		updateBoard(col, currentPlayer); // Example: Player 1 makes a move
+		onMove(row, col); // Call the callback function passed from the parent component
 	};
 
 	return (

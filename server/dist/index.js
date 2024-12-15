@@ -9,6 +9,8 @@ const socket_io_1 = require("socket.io");
 const cors_1 = __importDefault(require("cors"));
 const dotenv_1 = __importDefault(require("dotenv"));
 const path_1 = __importDefault(require("path"));
+const utils_1 = require("./utils");
+const gameStates = {};
 dotenv_1.default.config();
 const app = (0, express_1.default)();
 const port = process.env.PORT || 4000;
@@ -31,16 +33,59 @@ const io = new socket_io_1.Server(httpServer, {
 });
 // Set up Socket.IO connection
 io.on('connection', (socket) => {
-    console.log(`New client connected: ${socket.id}`);
-    // Handle a custom event (e.g., "message")
-    socket.on('message', (data) => {
-        console.log(`Message from client ${socket.id}:`, data);
-        // Emit a response to the client
-        socket.emit('response', `Server received: ${data}`);
+    console.log('a user connected');
+    socket.on('joinRoom', (gameCode) => {
+        socket.join(gameCode);
+        console.log(`User joined room: ${gameCode}`);
+        // Initialize game state if it doesn't exist
+        if (!gameStates[gameCode]) {
+            gameStates[gameCode] = {
+                playerOneScore: 0,
+                playerTwoScore: 0,
+                currentPlayer: 1,
+                board: Array(6).fill(null).map(() => Array(7).fill(0)), // Initialize your board state
+            };
+        }
+        // Send the current game state to the user
+        io.to(gameCode).emit('gameState', gameStates[gameCode]);
     });
-    // Handle client disconnect
+    socket.on('leaveRoom', (gameCode) => {
+        socket.leave(gameCode);
+        console.log(`User left room: ${gameCode}`);
+    });
+    socket.on('playerMove', (gameCode, col, player) => {
+        let gameState = gameStates[gameCode];
+        let newBoard = gameState.board.map((row) => row.slice());
+        console.log(`Player ${player} moved on ${col} in room ${gameCode}`);
+        let row = -1;
+        for (let r = newBoard.length - 1; r >= 0; r--) {
+            if (newBoard[r][col] === 0) {
+                newBoard[r][col] = player;
+                row = r;
+                break;
+            }
+        }
+        if (row !== -1 && (0, utils_1.checkWinner)(newBoard, row, col, player)) {
+            console.log(`Player ${player} wins!`);
+            if (player === 1) {
+                gameState.playerOneScore += 1;
+            }
+            else {
+                gameState.playerTwoScore += 1;
+            }
+            gameState.currentPlayer = 1;
+            newBoard = Array(6).fill(null).map(() => Array(7).fill(0));
+        }
+        gameState.currentPlayer = 1;
+        gameStates[gameCode] = {
+            ...gameState,
+            board: newBoard,
+        };
+        console.log(`New Board state in ${gameCode}: ${JSON.parse(JSON.stringify(newBoard))}`);
+        io.to(gameCode).emit('gameState', gameStates[gameCode]);
+    });
     socket.on('disconnect', () => {
-        console.log(`Client disconnected: ${socket.id}`);
+        console.log('user disconnected');
     });
 });
 // Start the server
