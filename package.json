@@ -1,0 +1,16 @@
+{
+    "name": "connect-four",
+    "private": true,
+    "workspaces": [
+        "/client/",
+        "/server/"
+    ],
+    "scripts": {
+        "build": "npm run build --workspaces",
+        "start": "npm run build:server && npm run start:server",
+        "build:client": "npm --prefix ./client run build",
+        "build:server": "npm --prefix ./server run build",
+        "start:server": "node ./server/dist/index.js",
+        "prestart": "npm run build:client"
+    }
+}
