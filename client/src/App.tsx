@@ -7,8 +7,6 @@ import { useState, useEffect } from 'react';
 import { io, Socket } from 'socket.io-client';
 const socket: Socket = io('http://localhost:4000'); // Update with your backend URL in production
 
-
-
 function App() {
 
 	const [messages, setMessages] = useState<string[]>([]);
@@ -36,28 +34,10 @@ function App() {
 	return (
 		<GameContextProvider>
 			<div className="App">
-				<div>
-					<input
-						type="text"
-						value={input}
-						onChange={(e) => setInput(e.target.value)}
-						placeholder="Enter message"
-					/>
-					<button onClick={sendMessage}>Send</button>
-				</div>
-				<div>
-					<h2>Messages</h2>
-					<ul>
-						{messages.map((msg, index) => (
-							<li key={index}>{msg}</li>
-						))}
-					</ul>
-				</div>
 				<Routes />
 			</div>
 			<div className="Footer"></div>
 		</GameContextProvider>
-
 	);
 }
 
