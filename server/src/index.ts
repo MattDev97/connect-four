@@ -15,6 +15,8 @@ interface GameState {
   playerTwoScore: number;
   currentPlayer: number;
   board: number[][]; // Replace with your board type
+  playerOneConnected: boolean;
+  playerTwoConnected: boolean;
 }
 const gameStates: { [key: string]: GameState } = {};
 const roomConnections: { [key: string]: RoomConnections } = {};
@@ -51,7 +53,7 @@ io.on('connection', (socket) => {
   console.log('a user connected');
 
   socket.on('joinRoom', (gameCode: string) => {
-
+	console.log('triggering joinRoom code');
     // Initialize game state if it doesn't exist
     if (!gameStates[gameCode]) {
       gameStates[gameCode] = {
@@ -59,6 +61,8 @@ io.on('connection', (socket) => {
         playerOneScore: 0,
         playerTwoScore: 0,
         board: Array(6).fill(null).map(() => Array(7).fill(0)), // Initialize your board state
+		playerOneConnected: false,
+		playerTwoConnected: false
       };
 
       roomConnections[gameCode] = {
@@ -69,13 +73,16 @@ io.on('connection', (socket) => {
 
     // Assign player to a slot if available
     const room = roomConnections[gameCode];
+	const gameState = gameStates[gameCode];
     if (!room.playerOneId) {
       room.playerOneId = socket.id;
+	  gameState.playerOneConnected = true;
     } else if (!room.playerTwoId) {
       room.playerTwoId = socket.id;
+	  gameState.playerTwoConnected = true;
     }
     
-    gameStates[gameCode].currentPlayer = room.playerOneId === socket.id ? 1 : 2;
+    //gameStates[gameCode].currentPlayer = room.playerOneId === socket.id ? 1 : 2;
     socket.join(gameCode);
     console.log(`User joined room: ${gameCode}`);
 
@@ -84,9 +91,10 @@ io.on('connection', (socket) => {
   });
 
   socket.on('leaveRoom', (gameCode: string) => {
-    socket.leave(gameCode);
     console.log(`User left room: ${gameCode}`);
   });
+
+
 
   socket.on('playerMove', (gameCode: string, col: number, socketUserId: string) => {
     let gameState = gameStates[gameCode];

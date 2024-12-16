@@ -37,7 +37,9 @@
 }
 
 .modal-wrapper {
-	margin: auto
+	margin: auto;
+	position: absolute;
+    z-index: 999;
 }
 
 .modal-content_wrapper {

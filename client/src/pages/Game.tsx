@@ -7,13 +7,19 @@ import { useGameContext } from '../context/GameContext';
 import { useLocation } from 'react-router-dom';
 
 import styles from './Game.module.css';
+import Modal from "../components/Modal/Modal";
+import { useEffect } from "react";
 
 function Game(): JSX.Element {
 	const location = useLocation();
   	const currentURL = location.pathname;
 	const gameCode = currentURL.split('/').pop() || '';  // Get the current URL path
-	const { playerOneScore, playerTwoScore, currentPlayer, updateBoard, board, setGameCode } = useGameContext();
-	setGameCode(gameCode);
+	const { playerOneScore, playerTwoScore, playerOneConnected, playerTwoConnected, currentPlayer, updateBoard, board, setGameCode } = useGameContext();
+
+	useEffect(() => {
+		console.log('Game code:', gameCode);
+		setGameCode(gameCode);
+	}, []);
 	
 	const handleMove = (row: number, col: number) => {
 		// Update the game state with the move
@@ -26,6 +32,11 @@ function Game(): JSX.Element {
 	
 	return (
 		<div className={styles['game-container']}>
+			<Modal header={<Logo></Logo>} backgroundColor='white'>
+				<h2>Connecting...</h2>
+				<h3>Player 1: {playerOneConnected ? 'Connected' : 'Not Connected'}</h3>
+				<h3>Player 2: {playerTwoConnected ? 'Connected' : 'Not Connected'}</h3>
+			</Modal>
 			<div className={styles['game-column']}>
 				<PlayerCard name="Player 1" playerNumber={1} score={playerOneScore}/>
 			</div>
