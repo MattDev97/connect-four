@@ -12,6 +12,7 @@ interface GameContextProps {
 	socketUserId?: string;
 	playerOneConnected?: boolean;
 	playerTwoConnected?: boolean;
+	currentRooms?: string[];
 	updateBoard?: (col: number, player: number) => void;
 	generateGameCode: () => string;
 	setGameCode: (gameCode: string) => void;
@@ -28,6 +29,8 @@ export const GameContextProvider: React.FC<{ children: ReactNode }> = ({ childre
 
 	const [playerOneConnected, setPlayerOneConnected] = useState<boolean>(false);
 	const [playerTwoConnected, setPlayerTwoConnected] = useState<boolean>(false);
+
+	const [currentRooms, setCurrentRooms] = useState<string[]>([]);
 
 	const generateGameCode = () => {
 		const newGameCode = Math.random().toString(36).substr(2, 5).toUpperCase();
@@ -55,8 +58,12 @@ export const GameContextProvider: React.FC<{ children: ReactNode }> = ({ childre
 
 	useEffect(() => {
 		if (gameCode) {
+			socket.emit('leaveRooms', currentRooms);
+			
 			console.log('Joining room:', gameCode);
 			socket.emit('joinRoom', gameCode);
+
+			setCurrentRooms([gameCode]);
 		}
 	}, [gameCode]);
 

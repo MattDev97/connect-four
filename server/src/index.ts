@@ -90,11 +90,31 @@ io.on('connection', (socket) => {
     io.to(gameCode).emit('gameState', gameStates[gameCode]);
   });
 
-  socket.on('leaveRoom', (gameCode: string) => {
-    console.log(`User left room: ${gameCode}`);
+  socket.on('leaveRooms', (gameCode: string[]) => {
+	gameCode.forEach((gameCode) => {
+		const room = roomConnections[gameCode];
+		const gameState = gameStates[gameCode];
+		if (room.playerOneId === socket.id) {
+			room.playerOneId = null;
+			gameState.playerOneConnected = false;
+		} else if (room.playerTwoId === socket.id) {
+			room.playerTwoId = null;
+			gameState.playerTwoConnected = false;
+		}
+		console.log(`User left room: ${gameCode}`);
+
+		if(!room.playerOneId && !room.playerTwoId) {
+			delete roomConnections[gameCode];
+			delete gameStates[gameCode];
+
+			console.log('No players in room, deleting room');
+		}
+	  	socket.leave(gameCode);
+
+		// Send the current game state to the user
+		io.to(gameCode).emit('gameState', gameStates[gameCode]);
+	});
   });
-
-
 
   socket.on('playerMove', (gameCode: string, col: number, socketUserId: string) => {
     let gameState = gameStates[gameCode];
