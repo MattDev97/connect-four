@@ -6,12 +6,10 @@ import { ReactComponent as Logo } from '../assets/logo.svg';
 
 function Home(): JSX.Element {
   return (
-    <div>
-		<Modal header={<Logo></Logo>} backgroundColor='var(--color-light-purple)'hideOverlay>
-			<Button url='/game/' backgroundColor='var(--color-yellow)'>Play vs Player</Button>
-			<Button url='/rules/'>Game Rules</Button>
-		</Modal>
-    </div>
+	<Modal header={<Logo></Logo>} backgroundColor='var(--color-light-purple)'hideOverlay>
+		<Button url='/game/' backgroundColor='var(--color-yellow)'>Play vs Player</Button>
+		<Button url='/rules/'>Game Rules</Button>
+	</Modal>
   );
 }
 
