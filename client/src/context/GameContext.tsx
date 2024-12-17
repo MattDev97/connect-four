@@ -9,6 +9,7 @@ interface GameContextProps {
 	board: number[][];
 	playerOneScore?: number;
 	playerTwoScore?: number;
+	playerNumber?: number;
 	socketUserId?: string;
 	playerOneConnected?: boolean;
 	playerTwoConnected?: boolean;
@@ -22,8 +23,10 @@ interface GameContextProps {
 const GameContext = createContext<GameContextProps | undefined>(undefined);
 
 export const GameContextProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
+	const devMode = false;
 	const [gameCode, setGameCode] = useState<string>('');
 	const [board, setBoard] = useState<number[][]>([]);
+	const [playerNumber, setPlayerNumber] = useState<number>(1);
 	const [currentPlayer, setCurrentPlayer] = useState<number>(1);
 	const [playerOneScore, setPlayerOneScore] = useState<number>(0);
 	const [playerTwoScore, setPlayerTwoScore] = useState<number>(0);
@@ -55,10 +58,22 @@ export const GameContextProvider: React.FC<{ children: ReactNode }> = ({ childre
 			setPlayerTwoScore(state.playerTwoScore);
 			setPlayerOneConnected(state.playerOneConnected);
 			setPlayerTwoConnected(state.playerTwoConnected);
-
-			console.log('Updating game state for room:', gameCode);
-			console.dir(state);
 		});
+
+		socket.on('getPlayerNumber', (playerNumber: number) => {
+			setPlayerNumber(playerNumber);
+			console.log('Player number:', playerNumber);
+		});
+
+		if(devMode) {
+			setBoard(Array(6).fill(null).map(() => Array(7).fill(0)));
+			setCurrentPlayer(1);
+			setPlayerNumber(1);
+			setPlayerOneScore(0);
+			setPlayerTwoScore(0);
+			setPlayerOneConnected(true);
+			setPlayerTwoConnected(true);
+		}
 	}, []);
 
 	useEffect(() => {
@@ -73,7 +88,7 @@ export const GameContextProvider: React.FC<{ children: ReactNode }> = ({ childre
 	}, [gameCode]);
 
 	return (
-		<GameContext.Provider value={{ updateBoard, leaveGame, playerOneConnected, playerTwoConnected, gameCode, generateGameCode, setGameCode, board, currentPlayer, playerOneScore, playerTwoScore }}>
+		<GameContext.Provider value={{ updateBoard, leaveGame, playerNumber, playerOneConnected, playerTwoConnected, gameCode, generateGameCode, setGameCode, board, currentPlayer, playerOneScore, playerTwoScore }}>
 			{children}
 		</GameContext.Provider>
 	);
