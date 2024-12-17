@@ -14,10 +14,10 @@ function Game(): JSX.Element {
 	const location = useLocation();
   	const currentURL = location.pathname;
 	const gameCode = currentURL.split('/').pop() || '';  // Get the current URL path
-	const { playerOneScore, playerTwoScore, playerOneConnected, playerTwoConnected, currentPlayer, updateBoard, board, setGameCode } = useGameContext();
+	const { playerOneScore, playerTwoScore, leaveGame, playerOneConnected, playerTwoConnected, currentPlayer, updateBoard, board, setGameCode } = useGameContext();
 	const [showConnectingModal, setShowConnectingModal] = useState<boolean>(false);
 	const [connectingModalText, setConnectingModalText] = useState<string>('Waiting for other players to join...');
-	
+
 	useEffect(() => {
 		console.log('Game code:', gameCode);
 		setGameCode(gameCode);
@@ -33,7 +33,7 @@ function Game(): JSX.Element {
 				setShowConnectingModal(false);
 			}, 2000);
 		}
-	})
+	}, [playerOneConnected, playerTwoConnected]);
 	
 	const handleMove = (row: number, col: number) => {
 		// Update the game state with the move
