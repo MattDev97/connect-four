@@ -3,6 +3,8 @@
 	flex-direction: row;
 	align-items: center;
 	justify-content: center;
+
+	position: relative;
 }
 
 .game-column {
@@ -18,4 +20,9 @@
     margin: 3rem;
 
 	justify-content: space-between;
+}
+
+.player-turn-indicator {
+	position: absolute;
+	bottom: -15%;
 }
