@@ -15,7 +15,7 @@ function Game(): JSX.Element {
 	const location = useLocation();
   	const currentURL = location.pathname;
 	const gameCode = currentURL.split('/').pop() || '';  // Get the current URL path
-	const { playerOneScore, playerTwoScore, playerNumber, leaveGame, playerOneConnected, playerTwoConnected, currentPlayer, updateBoard, board, setGameCode } = useGameContext();
+	const { playerOneScore, playerTwoScore, playerNumber, leaveGame, isCurrentPlayer, playerOneConnected, playerTwoConnected, currentPlayer, updateBoard, board, setGameCode } = useGameContext();
 	const [showConnectingModal, setShowConnectingModal] = useState<boolean>(false);
 	const [connectingModalText, setConnectingModalText] = useState<string>('Waiting for other players to join...');
 
@@ -77,7 +77,7 @@ function Game(): JSX.Element {
 					</div>
 				</div>
 				<div className={styles['game-container']}>
-					<BoardUI board={board} onMove={handleMove} currentPlayer={currentPlayer} playerNumber={playerNumber}/>
+					<BoardUI board={board} onMove={handleMove} currentPlayer={currentPlayer} playerNumber={playerNumber} isCurrentPlayer={isCurrentPlayer}/>
 					<div className={styles['player-turn-indicator']}>
 						<PlayerTurnIndicator currentPlayer={currentPlayer} playerNumber={playerNumber}/>
 					</div>
