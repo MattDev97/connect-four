@@ -36,6 +36,7 @@ const io = new socket_io_1.Server(httpServer, {
 io.on('connection', (socket) => {
     console.log('a user connected');
     socket.on('joinRoom', (gameCode) => {
+        console.log('triggering joinRoom code');
         // Initialize game state if it doesn't exist
         if (!gameStates[gameCode]) {
             gameStates[gameCode] = {
@@ -43,6 +44,8 @@ io.on('connection', (socket) => {
                 playerOneScore: 0,
                 playerTwoScore: 0,
                 board: Array(6).fill(null).map(() => Array(7).fill(0)), // Initialize your board state
+                playerOneConnected: false,
+                playerTwoConnected: false
             };
             roomConnections[gameCode] = {
                 playerOneId: null,
@@ -51,21 +54,43 @@ io.on('connection', (socket) => {
         }
         // Assign player to a slot if available
         const room = roomConnections[gameCode];
+        const gameState = gameStates[gameCode];
         if (!room.playerOneId) {
             room.playerOneId = socket.id;
+            gameState.playerOneConnected = true;
         }
         else if (!room.playerTwoId) {
             room.playerTwoId = socket.id;
+            gameState.playerTwoConnected = true;
         }
-        gameStates[gameCode].currentPlayer = room.playerOneId === socket.id ? 1 : 2;
+        //gameStates[gameCode].currentPlayer = room.playerOneId === socket.id ? 1 : 2;
         socket.join(gameCode);
         console.log(`User joined room: ${gameCode}`);
         // Send the current game state to the user
         io.to(gameCode).emit('gameState', gameStates[gameCode]);
     });
-    socket.on('leaveRoom', (gameCode) => {
-        socket.leave(gameCode);
-        console.log(`User left room: ${gameCode}`);
+    socket.on('leaveRooms', (gameCode) => {
+        gameCode.forEach((gameCode) => {
+            const room = roomConnections[gameCode];
+            const gameState = gameStates[gameCode];
+            if (room.playerOneId === socket.id) {
+                room.playerOneId = null;
+                gameState.playerOneConnected = false;
+            }
+            else if (room.playerTwoId === socket.id) {
+                room.playerTwoId = null;
+                gameState.playerTwoConnected = false;
+            }
+            console.log(`User left room: ${gameCode}`);
+            if (!room.playerOneId && !room.playerTwoId) {
+                delete roomConnections[gameCode];
+                delete gameStates[gameCode];
+                console.log('No players in room, deleting room');
+            }
+            socket.leave(gameCode);
+            // Send the current game state to the user
+            io.to(gameCode).emit('gameState', gameStates[gameCode]);
+        });
     });
     socket.on('playerMove', (gameCode, col, socketUserId) => {
         let gameState = gameStates[gameCode];

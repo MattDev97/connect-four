@@ -22,8 +22,17 @@
 	border: 1px solid rgba(0, 0, 0, 0.2);
 	z-index: 3;
 
-	cursor: pointer;
 	justify-content: center;
     align-items: center;
-    display: flex;
+    display: flex; 
+}
+
+.hover-cursor{
+	position: absolute;
+	top: -20px;
+    transform: translate(50%, -50%);
+}
+
+[data-active="true"] {
+	cursor: pointer;
 }

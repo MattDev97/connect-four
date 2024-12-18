@@ -1,0 +1,10 @@
+.indicator-wrapper {
+	position: relative;
+	bottom: 0;
+}
+
+.indicator-content {
+	margin-top: 20px;
+	z-index: 2 !important;
+    position: relative;
+}
