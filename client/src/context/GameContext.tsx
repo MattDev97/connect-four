@@ -1,7 +1,7 @@
 import React, { createContext, useEffect, useState, useContext, ReactNode, useCallback } from 'react';
 import { io, Socket } from 'socket.io-client';
 
-const socket: Socket = io(process.env.CONNECT_FOUR_URL); // Update with your backend URL in production
+const socket: Socket = io(process.env.REACT_APP_CONNECT_FOUR_URL); // Update with your backend URL in production
 
 interface GameContextProps {
 	gameCode: string;
