@@ -18,6 +18,7 @@ interface GameContextProps {
 	generateGameCode: () => string;
 	leaveGame: () => void;
 	setGameCode: (gameCode: string) => void;
+	isCurrentPlayer: () => boolean;
 }
 
 const GameContext = createContext<GameContextProps | undefined>(undefined);
@@ -28,6 +29,7 @@ export const GameContextProvider: React.FC<{ children: ReactNode }> = ({ childre
 	const [board, setBoard] = useState<number[][]>([]);
 	const [playerNumber, setPlayerNumber] = useState<number>(1);
 	const [currentPlayer, setCurrentPlayer] = useState<number>(1);
+
 	const [playerOneScore, setPlayerOneScore] = useState<number>(0);
 	const [playerTwoScore, setPlayerTwoScore] = useState<number>(0);
 
@@ -40,6 +42,10 @@ export const GameContextProvider: React.FC<{ children: ReactNode }> = ({ childre
 		const newGameCode = Math.random().toString(36).substr(2, 5).toUpperCase();
 		return newGameCode;
 	};
+
+	const isCurrentPlayer = useCallback(() => {
+		return playerNumber === currentPlayer;
+	}, [playerNumber, currentPlayer]);
 
 	const updateBoard = (col: number, player: number) => {
 		socket.emit('playerMove', gameCode, col, socket.id);
@@ -88,7 +94,7 @@ export const GameContextProvider: React.FC<{ children: ReactNode }> = ({ childre
 	}, [gameCode]);
 
 	return (
-		<GameContext.Provider value={{ updateBoard, leaveGame, playerNumber, playerOneConnected, playerTwoConnected, gameCode, generateGameCode, setGameCode, board, currentPlayer, playerOneScore, playerTwoScore }}>
+		<GameContext.Provider value={{ updateBoard, leaveGame, isCurrentPlayer, playerNumber, playerOneConnected, playerTwoConnected, gameCode, generateGameCode, setGameCode, board, currentPlayer, playerOneScore, playerTwoScore }}>
 			{children}
 		</GameContext.Provider>
 	);
