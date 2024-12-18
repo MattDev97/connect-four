@@ -4,8 +4,6 @@ import Button from "../components/Button/Button";
 import Modal from "../components/Modal/Modal";
 import TextInput from "../components/TextInput/TextInput";
 
-import { useGameContext } from '../context/GameContext';
-
 function Connection(): JSX.Element {
 	const [inputValue, setInputValue] = useState<string>('');
 	const [gameCode, setGameCode] = useState<string>('');

@@ -1,7 +1,7 @@
 import React, { createContext, useEffect, useState, useContext, ReactNode, useCallback } from 'react';
 import { io, Socket } from 'socket.io-client';
 
-const socket: Socket = io('http://localhost:4000'); // Update with your backend URL in production
+const socket: Socket = io(process.env.CONNECT_FOUR_URL); // Update with your backend URL in production
 
 interface GameContextProps {
 	gameCode: string;
@@ -80,7 +80,7 @@ export const GameContextProvider: React.FC<{ children: ReactNode }> = ({ childre
 			setPlayerOneConnected(true);
 			setPlayerTwoConnected(true);
 		}
-	}, []);
+	}, [devMode]);
 
 	useEffect(() => {
 		if (gameCode) {
@@ -91,7 +91,7 @@ export const GameContextProvider: React.FC<{ children: ReactNode }> = ({ childre
 
 			setCurrentRooms([gameCode]);
 		}
-	}, [gameCode]);
+	}, [gameCode, leaveGame]);
 
 	return (
 		<GameContext.Provider value={{ updateBoard, leaveGame, isCurrentPlayer, playerNumber, playerOneConnected, playerTwoConnected, gameCode, generateGameCode, setGameCode, board, currentPlayer, playerOneScore, playerTwoScore }}>

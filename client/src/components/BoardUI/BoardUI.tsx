@@ -68,8 +68,8 @@ function BoardUI({board, onMove, currentPlayer, playerNumber = -1, isCurrentPlay
 
 	return (
 		<div className={styles["board-wrapper"]}>
-			{(isCurrentPlayer() && currentPlayer == 1) && <HoverCursorPlayerOne className={styles["hover-cursor"]} ref={hoverCursorRef}/>}
-			{(isCurrentPlayer() && currentPlayer == 2) && <HoverCursorPlayerTwo className={styles["hover-cursor"]} ref={hoverCursorRef}/>}
+			{(isCurrentPlayer() && currentPlayer === 1) && <HoverCursorPlayerOne className={styles["hover-cursor"]} ref={hoverCursorRef}/>}
+			{(isCurrentPlayer() && currentPlayer === 2) && <HoverCursorPlayerTwo className={styles["hover-cursor"]} ref={hoverCursorRef}/>}
 
 			<div className={styles["board-front"]}>
 				<BoardFront ref={boardFrontRef} />
