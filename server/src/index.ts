@@ -28,14 +28,14 @@ const port = process.env.PORT || 4000;
 app.use(cors());
 app.use(express.json());
 
-// Serve React App static files
-const reactBuildPath = path.join(__dirname, '../../client/build');
-app.use(express.static(reactBuildPath));
+// // Serve React App static files
+// const reactBuildPath = path.join(__dirname, '../../client/build');
+// app.use(express.static(reactBuildPath));
 
-// Routes
-app.get('/', (req, res) => {
-  res.sendFile(path.join(reactBuildPath, 'index.html'));
-});
+// // Routes
+// app.get('/', (req, res) => {
+//   res.sendFile(path.join(reactBuildPath, 'index.html'));
+// });
 
 // Create an HTTP server to integrate with Socket.IO
 const httpServer = createServer(app);
