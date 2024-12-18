@@ -16,7 +16,6 @@ interface GameContextProps {
 	currentRooms?: string[];
 	updateBoard?: (col: number, player: number) => void;
 	generateGameCode: () => string;
-	leaveGame: () => void;
 	setGameCode: (gameCode: string) => void;
 	isCurrentPlayer: () => boolean;
 }
@@ -51,10 +50,6 @@ export const GameContextProvider: React.FC<{ children: ReactNode }> = ({ childre
 		socket.emit('playerMove', gameCode, col, socket.id);
 	}
 
-	const leaveGame = () => {
-		socket.emit('leaveRooms', currentRooms);
-	}
-
 	useEffect(() => {
 		socket.on('gameState', (state: any) => {
 			// Update context state with the received game state
@@ -84,17 +79,17 @@ export const GameContextProvider: React.FC<{ children: ReactNode }> = ({ childre
 
 	useEffect(() => {
 		if (gameCode) {
-			leaveGame();
+			socket.emit('leaveRooms', currentRooms);
 
 			console.log('Joining room:', gameCode);
 			socket.emit('joinRoom', gameCode);
 
 			setCurrentRooms([gameCode]);
 		}
-	}, [gameCode, leaveGame]);
+	}, [gameCode]);
 
 	return (
-		<GameContext.Provider value={{ updateBoard, leaveGame, isCurrentPlayer, playerNumber, playerOneConnected, playerTwoConnected, gameCode, generateGameCode, setGameCode, board, currentPlayer, playerOneScore, playerTwoScore }}>
+		<GameContext.Provider value={{ updateBoard, isCurrentPlayer, playerNumber, playerOneConnected, playerTwoConnected, gameCode, generateGameCode, setGameCode, board, currentPlayer, playerOneScore, playerTwoScore }}>
 			{children}
 		</GameContext.Provider>
 	);
