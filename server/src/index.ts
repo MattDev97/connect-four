@@ -88,6 +88,8 @@ io.on('connection', (socket) => {
 
     // Send the current game state to the user
     io.to(gameCode).emit('gameState', gameStates[gameCode]);
+
+	socket.emit('getPlayerNumber', room.playerOneId === socket.id ? 1 : 2);
   });
 
   socket.on('leaveRooms', (gameCode: string[]) => {
