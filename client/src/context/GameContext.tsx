@@ -15,6 +15,7 @@ interface GameContextProps {
 	playerTwoConnected?: boolean;
 	currentRooms?: string[];
 	updateBoard?: (col: number, player: number) => void;
+	leaveBoard?: () => void;
 	generateGameCode: () => string;
 	setGameCode: (gameCode: string) => void;
 	isCurrentPlayer: () => boolean;
@@ -50,8 +51,14 @@ export const GameContextProvider: React.FC<{ children: ReactNode }> = ({ childre
 		socket.emit('playerMove', gameCode, col, socket.id);
 	}
 
+	const leaveBoard = () => {
+		socket.emit('leaveRooms', currentRooms);
+	}
+
 	useEffect(() => {
 		socket.on('gameState', (state: any) => {
+			console.dir('GameState: ');
+			console.dir(JSON.parse(JSON.stringify(state)));
 			// Update context state with the received game state
 			setBoard(state.board);
 			setCurrentPlayer(state.currentPlayer);
@@ -66,30 +73,33 @@ export const GameContextProvider: React.FC<{ children: ReactNode }> = ({ childre
 			console.log('Player number:', playerNumber);
 		});
 
-		if(devMode) {
-			setBoard(Array(6).fill(null).map(() => Array(7).fill(0)));
-			setCurrentPlayer(1);
-			setPlayerNumber(1);
-			setPlayerOneScore(0);
-			setPlayerTwoScore(0);
-			setPlayerOneConnected(true);
-			setPlayerTwoConnected(true);
-		}
-	}, [devMode]);
+		// if (devMode) {
+		// 	setBoard(Array(6).fill(null).map(() => Array(7).fill(0)));
+		// 	setCurrentPlayer(1);
+		// 	setPlayerNumber(1);
+		// 	setPlayerOneScore(0);
+		// 	setPlayerTwoScore(0);
+		// 	setPlayerOneConnected(true);
+		// 	setPlayerTwoConnected(true);
+		// }
+	}, []);
 
 	useEffect(() => {
 		if (gameCode) {
 			socket.emit('leaveRooms', currentRooms);
+			console.log('gameCode changed: ' + gameCode);
 
 			console.log('Joining room:', gameCode);
 			socket.emit('joinRoom', gameCode);
 
 			setCurrentRooms([gameCode]);
+		} else {
+			socket.emit('leaveRooms', currentRooms);
 		}
 	}, [gameCode]);
 
 	return (
-		<GameContext.Provider value={{ updateBoard, isCurrentPlayer, playerNumber, playerOneConnected, playerTwoConnected, gameCode, generateGameCode, setGameCode, board, currentPlayer, playerOneScore, playerTwoScore }}>
+		<GameContext.Provider value={{ updateBoard, leaveBoard, isCurrentPlayer, playerNumber, playerOneConnected, playerTwoConnected, gameCode, generateGameCode, setGameCode, board, currentPlayer, playerOneScore, playerTwoScore }}>
 			{children}
 		</GameContext.Provider>
 	);

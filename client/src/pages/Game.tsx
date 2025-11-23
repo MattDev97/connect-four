@@ -13,29 +13,35 @@ import PlayerTurnIndicator from "../components/PlayerTurnIndicator/PlayerTurnInd
 
 function Game(): JSX.Element {
 	const location = useLocation();
-  	const currentURL = location.pathname;
+	const currentURL = location.pathname;
 	const gameCode = currentURL.split('/').pop() || '';  // Get the current URL path
-	const { playerOneScore, playerTwoScore, playerNumber, isCurrentPlayer, playerOneConnected, playerTwoConnected, currentPlayer, updateBoard, board, setGameCode } = useGameContext();
+	const { playerOneScore, playerTwoScore, playerNumber, isCurrentPlayer, playerOneConnected, playerTwoConnected, currentPlayer, updateBoard, leaveBoard, board, setGameCode } = useGameContext();
 	const [showConnectingModal, setShowConnectingModal] = useState<boolean>(false);
 	const [connectingModalText, setConnectingModalText] = useState<string>('Waiting for other players to join...');
 
 	useEffect(() => {
-		console.log('Game code:', gameCode);
+		return () => {
+			setGameCode('');
+		}
+	}, [])
+
+
+	useEffect(() => {
 		setGameCode(gameCode);
 	}, [gameCode, setGameCode]);
 
 	useEffect(() => {
-		if(!playerOneConnected || !playerTwoConnected) {
-			setConnectingModalText('Waiting for other players to join...');
-			setShowConnectingModal(true);
-		} else {
+		if (playerOneConnected && playerTwoConnected) {
 			setConnectingModalText('Found players, starting game...');
 			setTimeout(() => {
 				setShowConnectingModal(false);
 			}, 2000);
+		} else {
+			setConnectingModalText('Waiting for other players to join...');
+			setShowConnectingModal(true);
 		}
 	}, [playerOneConnected, playerTwoConnected]);
-	
+
 	const handleMove = (row: number, col: number) => {
 		// Update the game state with the move
 		if (updateBoard) {
@@ -44,7 +50,7 @@ function Game(): JSX.Element {
 		// Additional logic to update the parent component
 		console.log(`Move made at row: ${row}, col: ${col} by player: ${currentPlayer}`);
 	};
-	
+
 	return (
 		<div className={styles['game-container']}>
 			{
@@ -56,9 +62,9 @@ function Game(): JSX.Element {
 					<h3>Player 2: {playerTwoConnected ? 'Connected' : 'Not Connected'}</h3>
 				</Modal>
 			}
-			
+
 			<div className={styles['game-column']}>
-				<PlayerCard name={playerNumber === 1 ? 'You' : 'Player 1'} playerNumber={1} score={playerOneScore}/>
+				<PlayerCard name={playerNumber === 1 ? 'You' : 'Player 1'} playerNumber={1} score={playerOneScore} />
 			</div>
 			<div className={styles['game-column']}>
 				<div className={styles['game-header'] + ' ' + styles['game-container']}>
@@ -77,17 +83,17 @@ function Game(): JSX.Element {
 					</div>
 				</div>
 				<div className={styles['game-container']}>
-					<BoardUI board={board} onMove={handleMove} currentPlayer={currentPlayer} playerNumber={playerNumber} isCurrentPlayer={isCurrentPlayer}/>
+					<BoardUI board={board} onMove={handleMove} currentPlayer={currentPlayer} playerNumber={playerNumber} isCurrentPlayer={isCurrentPlayer} />
 					<div className={styles['player-turn-indicator']}>
-						<PlayerTurnIndicator currentPlayer={currentPlayer} playerNumber={playerNumber}/>
+						<PlayerTurnIndicator currentPlayer={currentPlayer} playerNumber={playerNumber} />
 					</div>
 				</div>
 			</div>
 			<div className={styles['game-column']}>
-				<PlayerCard name={playerNumber === 2 ? 'You' : 'Player 2'} playerNumber={2} score={playerTwoScore}/>
+				<PlayerCard name={playerNumber === 2 ? 'You' : 'Player 2'} playerNumber={2} score={playerTwoScore} />
 			</div>
 		</div>
 	);
-  }
-  
-  export default Game;
+}
+
+export default Game;
