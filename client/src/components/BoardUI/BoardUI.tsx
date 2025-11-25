@@ -20,7 +20,7 @@ type BoardUIProps = {
 	isCurrentPlayer?: () => boolean;
 };
 
-function BoardUI({board, onMove, currentPlayer, playerNumber = -1, isCurrentPlayer = () => false} : BoardUIProps): JSX.Element {
+function BoardUI({ board, onMove, currentPlayer, playerNumber = -1, isCurrentPlayer = () => false }: BoardUIProps): JSX.Element {
 	const rows = 6;
 	const columns = 7;
 
@@ -43,33 +43,24 @@ function BoardUI({board, onMove, currentPlayer, playerNumber = -1, isCurrentPlay
 		}
 	}, [hoveredColumn]);
 
-	// useEffect(() => {
-	// 	console.log(playerNumber + ' is currentPlayer: ' + currentPlayer);
-	// 	if (playerNumber === currentPlayer) {
-	// 		setIsCurrentPlayer(true);
-	// 	} else {
-	// 		setIsCurrentPlayer(false);
-	// 	}
-	// }, [playerNumber]);
-
 
 	const handleMove = (row: number, col: number) => {
-		if(!isCurrentPlayer()) return;
+		if (!isCurrentPlayer()) return;
 		onMove(row, col); // Call the callback function passed from the parent component
 	};
 
 	const handleMouseEnter = (col: number) => {
 		setHoveredColumn(col);
 	};
-	
-	  const handleMouseLeave = () => {
+
+	const handleMouseLeave = () => {
 		setHoveredColumn(null);
 	};
 
 	return (
 		<div className={styles["board-wrapper"]}>
-			{(isCurrentPlayer() && currentPlayer === 1) && <HoverCursorPlayerOne className={styles["hover-cursor"]} ref={hoverCursorRef}/>}
-			{(isCurrentPlayer() && currentPlayer === 2) && <HoverCursorPlayerTwo className={styles["hover-cursor"]} ref={hoverCursorRef}/>}
+			{(isCurrentPlayer() && currentPlayer === 1) && <HoverCursorPlayerOne className={styles["hover-cursor"]} ref={hoverCursorRef} />}
+			{(isCurrentPlayer() && currentPlayer === 2) && <HoverCursorPlayerTwo className={styles["hover-cursor"]} ref={hoverCursorRef} />}
 
 			<div className={styles["board-front"]}>
 				<BoardFront ref={boardFrontRef} />
@@ -82,7 +73,7 @@ function BoardUI({board, onMove, currentPlayer, playerNumber = -1, isCurrentPlay
 						data-col={cell.colIndex}
 						onClick={() => handleMove(cell.rowIndex, cell.colIndex)}
 						onMouseEnter={() => handleMouseEnter(cell.colIndex)}
-            			onMouseLeave={handleMouseLeave}
+						onMouseLeave={handleMouseLeave}
 						key={index}
 						className={styles["grid-cell"]}
 						style={{
